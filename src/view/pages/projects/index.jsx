@@ -1,6 +1,22 @@
 import React, { useState } from "react";
 
-import { Space, Table, Tag, Button } from "antd";
+import {
+
+  Button,
+  Form,
+  Row,Col,
+  Space,
+  Table,
+  Select,
+  Input,
+  DatePicker,
+  TimePicker,
+  Modal,
+  message,
+  Upload,
+} from "antd";
+import { RiCloseFill, RiCalendarLine } from "react-icons/ri";
+
 // import InfoProfile from "./personel-information";
 // import MenuProfile from "./menu";
 // import PasswordProfile from "./password-change";
@@ -147,11 +163,90 @@ const data = [
   },
 ];
 export default function Projects() {
+  const [projectModalVisible, setProjectModalVisible] = useState(false);
+  const [projName, setProjName] = useState("");
+
+
+  const projectModalShow = () => {
+    setProjectModalVisible(true);
+  };
+
+  const projectModalCancel = () => {
+    setProjectModalVisible(false);
+  };
+
   return (
     <>
-      {" "}
+      <Modal
+        title="Add Project"
+        width={416}
+        centered
+        visible={projectModalVisible}
+        onCancel={projectModalCancel}
+        footer={null}
+        closeIcon={
+          <RiCloseFill className="remix-icon text-color-black-100" size={24} />
+        }
+      >
+        <Form
+          layout="vertical"
+          name="basic"
+          initialValues={{
+            remember: true,
+            projName,
+          }}
+        >
+          <Form.Item label="Project Name" name="projName">
+            <Input
+              value={projName}
+              onChange={(e) => setProjName(e.target.value)}
+            />
+          </Form.Item>
+
+          <Form.Item label="Department Name" name="deptName">
+            <Select
+              defaultValue="IT"
+              options={[
+                { value: "IT", label: "IT" },
+                { value: "Admin", label: "Admin" },
+                { value: "Supply Chain", label: "Supply Chain" },
+              ]}
+            />
+          </Form.Item>
+
+          <Form.Item label="Status" name="status">
+            <Select
+              defaultValue="ongoing"
+              options={[
+                { value: "ongoing", label: "Ongoing" },
+                { value: "complete", label: "Complete" },
+                { value: "notstarted", label: "Not Started" },
+              ]}
+            />
+          </Form.Item>
+          <Row>
+            <Col md={12} span={24} className="hp-pr-sm-0 hp-pr-12">
+              <Button
+                block
+                type="primary"
+                htmlType="submit"
+                onClick={()=>console.log("Add Project")}
+              >
+                Add
+              </Button>
+            </Col>
+
+            <Col md={12} span={24} className="hp-mt-sm-12 hp-pl-sm-0 hp-pl-12">
+              <Button block onClick={projectModalCancel}>
+                Cancel
+              </Button>
+            </Col>
+          </Row>
+        </Form>
+      </Modal>
+
       <div style={{ textAlign: "right", marginBottom: "16px" }}>
-        <Button type="primary">Add Project</Button>
+        <Button type="primary" onClick={projectModalShow}>Add Project</Button>
       </div>
       <Table columns={columns} dataSource={data} />
     </>

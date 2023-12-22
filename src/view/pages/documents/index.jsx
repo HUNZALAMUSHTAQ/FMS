@@ -18,10 +18,14 @@ import {
   message,
   Upload,
 } from "antd";
+import { Radio } from "antd";
 
 import { RiCloseFill, RiCalendarLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { UploadOutlined } from "@ant-design/icons";
+
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const uploadProps = {
   name: "file",
@@ -172,121 +176,109 @@ const data = [
   // ... (Include additional rows as needed)
 ];
 export default function Documents() {
-  const [contactModalVisible, setContactModalVisible] = useState(false);
+  const [documentModalVisible, setDocumentModalVisible] = useState(false);
   const [docTitle, setDocTitle] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [address, setAddress] = useState("");
+  const [textEditorValue, setTextEditorValue] = useState("");
 
-  const updateUserInfo = () => {
-    const obj = { id: user?.id };
-    if (docTitle) {
-      obj.docTitle = docTitle;
-    }
-    if (lastName) {
-      obj.lastName = lastName;
-    }
-    if (phoneNumber) {
-      obj.phoneNumber = phoneNumber;
-    }
-    if (address) {
-      obj.address = address;
-    }
-    dispatch(updateUserInformation(obj));
-    setAddress("");
-    setFirstName("");
-    setLastName("");
-    setPhoneNumber("");
-    contactModalCancel();
-  };
-  const contactModalShow = () => {
-    setContactModalVisible(true);
+  const documentModalShow = () => {
+    setDocumentModalVisible(true);
   };
 
-  const contactModalCancel = () => {
-    setContactModalVisible(false);
+  const documentModalCancel = () => {
+    setDocumentModalVisible(false);
   };
 
   return (
     <>
       <Modal
         title="Upload Document"
-        width={416}
+        width={1000}
         centered
-        visible={contactModalVisible}
-        onCancel={contactModalCancel}
+        visible={documentModalVisible}
+        onCancel={documentModalCancel}
         footer={null}
         closeIcon={
           <RiCloseFill className="remix-icon text-color-black-100" size={24} />
         }
       >
-        <Form
-          layout="vertical"
-          name="basic"
-          initialValues={{
-            remember: true,
-            docTitle,
-            lastName,
-            address,
-            phoneNumber,
-          }}
-        >
-          <Form.Item label="Document Title" name="docTitle">
-            <Input
-              value={docTitle}
-              onChange={(e) => setDocTitle(e.target.value)}
+        <Row justify="space-between" align="center" >
+          <Col span={15} >
+            <ReactQuill
+            style={{height: "200px"}}
+              theme="snow"
+              value={textEditorValue}
+              onChange={setTextEditorValue}
             />
-          </Form.Item>
+          </Col>
+          <Col span={7}>
+            <Form
+              layout="vertical"
+              name="basic"
+              initialValues={{
+                remember: true,
+                docTitle,
+              }}
+            >
+              <Form.Item label="Document Title" name="docTitle">
+                <Input
+                  value={docTitle}
+                  onChange={(e) => setDocTitle(e.target.value)}
+                />
+              </Form.Item>
 
-          <Form.Item label="Department Name" name="deptName">
-            <Select
-              defaultValue="IT"
-              options={[
-                { value: "IT", label: "IT" },
-                { value: "Admin", label: "Admin" },
-                { value: "Supply Chain", label: "Supply Chain" },
-              ]}
-            />
-          </Form.Item>
+              <Form.Item label="Department Name" name="deptName">
+                <Select
+                  defaultValue="IT"
+                  options={[
+                    { value: "IT", label: "IT" },
+                    { value: "Admin", label: "Admin" },
+                    { value: "Supply Chain", label: "Supply Chain" },
+                  ]}
+                />
+              </Form.Item>
 
-          <Form.Item label="Project Name" name="deptName">
-            <Select
-              defaultValue="IT"
-              options={[
-                { value: "IT", label: "EX-212" },
-                { value: "Admin", label: "Pr-421" },
-                { value: "Supply Chain", label: "PR13244" },
-              ]}
-            />
-          </Form.Item>
+              <Form.Item label="Project Name" name="deptName">
+                <Select
+                  defaultValue="IT"
+                  options={[
+                    { value: "IT", label: "EX-212" },
+                    { value: "Admin", label: "Pr-421" },
+                    { value: "Supply Chain", label: "PR13244" },
+                  ]}
+                />
+              </Form.Item>
 
-          
+              <Upload {...uploadProps}>
+                <Button icon={<UploadOutlined />}>Click to Upload</Button>
+              </Upload>
+              <Row>
+                <Col md={12} span={24} className="hp-pr-sm-0 hp-pr-12">
+                  <Button
+                    block
+                    type="primary"
+                    htmlType="submit"
+                    onClick={() => console.log("updateUserInfo")}
+                  >
+                    Submit
+                  </Button>
+                </Col>
 
-          <Upload {...uploadProps}>
-            <Button icon={<UploadOutlined />}>Click to Upload</Button>
-          </Upload>
-          <Row>
-            <Col md={12} span={24} className="hp-pr-sm-0 hp-pr-12">
-              <Button
-                block
-                type="primary"
-                htmlType="submit"
-                onClick={updateUserInfo}
-              >
-                Submit
-              </Button>
-            </Col>
-
-            <Col md={12} span={24} className="hp-mt-sm-12 hp-pl-sm-0 hp-pl-12">
-              <Button block onClick={contactModalCancel}>
-                Cancel
-              </Button>
-            </Col>
-          </Row>
-        </Form>
+                <Col
+                  md={12}
+                  span={24}
+                  className="hp-mt-sm-12 hp-pl-sm-0 hp-pl-12"
+                >
+                  <Button block onClick={documentModalCancel}>
+                    Cancel
+                  </Button>
+                </Col>
+              </Row>
+            </Form>
+          </Col>
+        </Row>
       </Modal>
       <div style={{ textAlign: "right", marginBottom: "16px" }}>
-        <Button type="primary" onClick={contactModalShow}>
+        <Button type="primary" onClick={documentModalShow}>
           Add Documents
         </Button>
       </div>
